@@ -1,0 +1,41 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+
+#posts > a, a:hover, a:visited {
+  color: grey;
+}
+
+.green {
+  color: green;
+}
+
+.red {
+  color: red;
+}
+
+.black {
+  color: black;
+}
+
+img {
+  height: 200px;
+  width: 250px;
+}
+
+
+@media screen and (max-width: 400px) {
+  img {
+    height: auto;
+    width: 250px;
+    margin-left: -20px;
+  }
+
+  #mobile {
+    width: 275px;
+    margin-left: -40px;
+  }
+
+}

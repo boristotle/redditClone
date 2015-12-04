@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html ng-app='redditApp'>
+  <head>
+    <title>REDDIT Clone</title>
+    <base href='/'>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.4/angular.min.js'></script>
+    <script type="text/javascript" src="/javascripts/app.js"></script>
+    <link rel='stylesheet' href='/stylesheets/style.css'>
+    <link rel='stylesheet' href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" / >
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+    <link rel="stylesheet" href="https://bootswatch.com/cerulean/bootstrap.min.css">
+  </head>
+  <body ng-controller='reddit'>
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/">REDDIT Clone</a>
+      </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li><a href="" ng-click='showForm()'>Submit Post <span class="sr-only">(current)</span></a></li>
+        
+        <li><form class="navbar-form navbar-left" role="search">
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Search" ng-model='search.$'>
+          </div>
+        </form>
+      </li>
+         <li class="dropdown">
+            <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Sort By <span class="caret"></span></a>
+            <ul class="dropdown-menu" ng-model='sortOrder'>
+              <li><a href="" ng-click="sortOrder = '-rating'">Votes</a></li>
+              <li><a href="" ng-click="sortOrder = 'date'">Date</a></li>
+              <li><a href="" ng-click="sortOrder = 'title'">Title</a></li>
+            </ul>
+          </li>
+
+         
+      </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+    <div class='container'>
+      <div>
+        <form role='form' name='form' ng-show='show' novalidate ng-submit='createPost()'>
+          <div class='form-group'>
+            <label for'title'>Title</label>
+            <input type='text' class='form-control title' ng-model='title' ng-click='error = null' required>
+          </div>
+          <div class='form-group'>
+            <label for'author'>Author</label>
+            <input type='text' class='form-control author' ng-model='author' ng-click='error = null' required>
+          </div>
+          <div class='form-group'>
+            <label for'image'>Image URL</label>
+            <input type='text' class='form-control image' ng-model='image' ng-click='error = null' required>
+          </div>
+          <div class='form-group'>
+            <label for'desc'>Description</label>
+            <input type='text' class='form-control desc' ng-model='desc' ng-click='error = null' required>
+          </div>
+          <div>
+            <p ng-show='error' ng-class='{red: error}'>All fields must be filled out</p>
+            <input type='submit' value='Submit Post' ng-click='insert(form.$valid)'>
+            
+          </div>
+        </form>
+    </div>
+        <br>
+      <div id='mobile' class='well row' ng-repeat="post in newPost | orderBy:sortOrder | filter: search">
+        <div class='col-md-4'>
+            <img ng-src="{{ post.image }}" />
+        </div>
+        <div class='col-md-8' id='posts'>
+            <h2>{{ post.title }} <i ng-click='addRating(this)' class="fa fa-arrow-up"></i>&nbsp;&nbsp;<i ng-click='minusRating(this)' class="fa fa-arrow-down"></i> <span ng-class='{green: post.rating > 0, red: post.rating < 0, black: post.rating == 0}'>{{ post.rating }}</span></h2>
+            <p class='col-md-offset-10'>By {{ post.author }}</p>
+            <p>{{ post.desc }} </p>
+            <p>{{ post.date | date: "EEEE 'at' h:mm a" }} | <i class="fa fa-commenting-o"></i><span ng-click='showComments(this)'> {{ post.comments.length }} <span ng-click='hideShow(post)'><a href ><ng-pluralize count="post.comments.length"
+                 when="{'0': 'Comments',
+                     'one': 'Comment',
+                     'other': 'Comments'}">
+             </ng-pluralize></a> </span></span> | <i class="fa fa-pencil"></i><span ng-click='addComment()'> <a href >Add Comment</a></span></p>
+            <p ng-hide='hide' ng-repeat='comment in post.comments'> <strong>{{ comment.comAuth }}</strong> - {{ comment.comText }} </p>
+            <p ng-show='add'>Author <input type='text' ng-model='this.elem.comAuth'> Text <input type='text' ng-model='this.elem.comText'> <button class='btn btn-primary btn-sm' ng-click='submit(this); hideComment()'>Add Comment</button></p>
+      </div><!--closes well/post div-->
+  </div><!--closes container div-->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script>$(document).on('click','.navbar-collapse.in',function(e) {
+    if( $(e.target).is('a') ) {
+        $(this).collapse('hide');
+    }
+    });
+    </script>
+  </body>
+</html>
